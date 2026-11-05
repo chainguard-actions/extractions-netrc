@@ -1,0 +1,43 @@
+name: Test multiple entries are appended
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Ensure clean netrc
+        run: rm -f "$HOME/.netrc"
+      - id: first
+        uses: .
+        with:
+          machine: one.example.com
+          username: user1
+          password: pass1
+      - id: second
+        uses: .
+        with:
+          machine: two.example.com
+          username: user2
+          password: pass2
+      - name: Assert both entries present in order
+        run: |
+          NETRC="$HOME/.netrc"
+          cat "$NETRC"
+          LINES="$(wc -l < "$NETRC" | tr -d ' ')"
+          echo "lines: $LINES"
+          if [ "$LINES" != "2" ]; then
+            echo "FAIL: expected 2 lines"
+            exit 1
+          fi
+          L1="$(sed -n 1p "$NETRC")"
+          L2="$(sed -n 2p "$NETRC")"
+          if [ "$L1" != "machine one.example.com login user1 password pass1" ]; then
+            echo "FAIL: unexpected first line: $L1"
+            exit 1
+          fi
+          if [ "$L2" != "machine two.example.com login user2 password pass2" ]; then
+            echo "FAIL: unexpected second line: $L2"
+            exit 1
+          fi
+          echo "PASS"

@@ -1,6 +1,11 @@
 {
   "owner": "extractions",
   "repo": "netrc",
-  "version": "",
-  "url": "https://github.com/extractions/netrc"
+  "version": "v3",
+  "commit_sha": "c3879108aae6b4ed5c4eb60854ae04f06d2f2f68",
+  "url": "https://github.com/extractions/netrc",
+  "policy_sha": "d636be7e43ef829af6e853da6b3c7566db9f72fe",
+  "test_policy_sha": "843adf9e4b8f85d0c08b27b9d0b09dd094b54702",
+  "test_agent_version": "2",
+  "harden_agent_version": "2"
 }

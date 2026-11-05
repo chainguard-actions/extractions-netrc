@@ -1,0 +1,36 @@
+name: Test basic usage
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Ensure clean netrc
+        run: rm -f "$HOME/.netrc"
+      - id: action
+        uses: .
+        with:
+          machine: example.com
+          username: alice
+          password: s3cret
+      - name: Assert netrc content and permissions
+        run: |
+          NETRC="$HOME/.netrc"
+          if [ ! -f "$NETRC" ]; then
+            echo "FAIL: $NETRC not found"
+            exit 1
+          fi
+          CONTENT="$(cat "$NETRC")"
+          echo "content: $CONTENT"
+          if [ "$CONTENT" != "machine example.com login alice password s3cret" ]; then
+            echo "FAIL: unexpected netrc content"
+            exit 1
+          fi
+          MODE="$(stat -c '%a' "$NETRC")"
+          echo "mode: $MODE"
+          if [ "$MODE" != "600" ]; then
+            echo "FAIL: expected mode 600"
+            exit 1
+          fi
+          echo "PASS"

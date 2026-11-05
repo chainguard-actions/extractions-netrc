@@ -1,0 +1,38 @@
+{
+  "name": "netrc",
+  "version": "3.0.0",
+  "description": "Append an entry to the netrc file",
+  "main": "dist/index.js",
+  "scripts": {
+    "fmt": "node node_modules/.bin/prettier --write **/*.ts",
+    "lint": "node node_modules/.bin/eslint **/*.ts",
+    "build": "rm -rf dist/ && ncc build src/create.ts --minify -o dist/create && ncc build src/remove.ts --minify -o dist/remove",
+    "run": "npm run build && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/extractions/netrc.git"
+  },
+  "author": "Ross MacArthur <ross@macarthur.io>",
+  "license": "MIT OR Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/extractions/netrc/issues"
+  },
+  "homepage": "https://github.com/extractions/netrc#readme",
+  "dependencies": {
+    "@actions/core": "^3.0.0"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.3.5",
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.12.0",
+    "@types/semver": "^7.5.8",
+    "@typescript-eslint/eslint-plugin": "^8.57.0",
+    "@typescript-eslint/parser": "^8.57.0",
+    "@vercel/ncc": "^0.38.1",
+    "eslint": "^10.0.3",
+    "globals": "^17.4.0",
+    "prettier": "^3.2.5",
+    "typescript": "^5.3.3"
+  }
+}
