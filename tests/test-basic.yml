@@ -1,0 +1,36 @@
+name: Test basic usage
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Remove any pre-existing netrc
+        run: rm -f "$HOME/.netrc"
+      - id: action
+        uses: .
+        with:
+          machine: example.com
+          username: alice
+          password: s3cret
+      - name: Assert netrc content and permissions
+        run: |
+          NETRC="$HOME/.netrc"
+          if [ ! -f "$NETRC" ]; then
+            echo "FAIL: $NETRC not created"
+            exit 1
+          fi
+          echo "content:"; cat "$NETRC"
+          EXPECTED="machine example.com login alice password s3cret"
+          if [ "$(cat "$NETRC")" != "$EXPECTED" ]; then
+            echo "FAIL: expected '$EXPECTED'"
+            exit 1
+          fi
+          MODE="$(stat -c '%a' "$NETRC")"
+          echo "mode: $MODE"
+          if [ "$MODE" != "600" ]; then
+            echo "FAIL: expected mode 600"
+            exit 1
+          fi
+          echo "PASS"

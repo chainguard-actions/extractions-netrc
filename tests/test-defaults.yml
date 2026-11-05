@@ -1,0 +1,25 @@
+name: Test default username and password
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Remove any pre-existing netrc
+        run: rm -f "$HOME/.netrc"
+      - id: action
+        uses: .
+        with:
+          machine: host.example.org
+      - name: Assert placeholders are written
+        run: |
+          NETRC="$HOME/.netrc"
+          [ -f "$NETRC" ] || { echo "FAIL: $NETRC not created"; exit 1; }
+          echo "content:"; cat "$NETRC"
+          EXPECTED="machine host.example.org login '' password ''"
+          if [ "$(cat "$NETRC")" != "$EXPECTED" ]; then
+            echo "FAIL: expected \"$EXPECTED\""
+            exit 1
+          fi
+          echo "PASS"
