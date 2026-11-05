@@ -1,0 +1,35 @@
+{
+  "name": "netrc",
+  "version": "1.4.0",
+  "description": "Append an entry to the netrc file",
+  "main": "dist/index.js",
+  "scripts": {
+    "fmt": "node node_modules/.bin/prettier --write **/*.ts",
+    "lint": "node node_modules/.bin/eslint **/*.ts",
+    "build": "rm -rf dist/ && ncc build src/index.ts --minify",
+    "run": "npm run build && node dist/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/extractions/netrc.git"
+  },
+  "author": "Ross MacArthur <ross@macarthur.io>",
+  "license": "MIT OR Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/extractions/netrc/issues"
+  },
+  "homepage": "https://github.com/extractions/netrc#readme",
+  "dependencies": {
+    "@actions/core": "^1.10.0"
+  },
+  "devDependencies": {
+    "@types/node": "^18.8.5",
+    "@types/semver": "^7.3.12",
+    "@typescript-eslint/eslint-plugin": "^5.40.0",
+    "@typescript-eslint/parser": "^5.40.0",
+    "@vercel/ncc": "^0.34.0",
+    "eslint": "^8.25.0",
+    "prettier": "^2.7.1",
+    "typescript": "^4.8.4"
+  }
+}

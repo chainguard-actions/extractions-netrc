@@ -1,0 +1,20 @@
+name: 'Setup netrc'
+author: 'Ross MacArthur'
+description: 'Append an entry to the netrc file'
+branding:
+  icon: 'lock'
+  color: 'black'
+inputs:
+  machine:
+    description: 'The remote machine name'
+    required: true
+  username:
+    description: 'The remote username'
+    default: ''
+  password:
+    description: 'The remote password'
+    default: ''
+runs:
+  pre: chainguard-phonehome.js
+  using: 'node16'
+  main: 'dist/index.js'

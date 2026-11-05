@@ -1,0 +1,25 @@
+name: Test special characters are URI-encoded
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Remove any pre-existing netrc
+        run: rm -f "$HOME/.netrc"
+      - id: action
+        uses: .
+        with:
+          machine: example.com
+          username: bob smith
+          password: p w"d
+      - name: Assert spaces and quotes are encoded
+        run: |
+          f="$HOME/.netrc"
+          echo "content:"; cat "$f"
+          expected='machine example.com login bob%20smith password p%20w%22d'
+          if [ "$(cat "$f")" != "$expected" ]; then
+            echo "FAIL: expected '$expected'"; exit 1
+          fi
+          echo "PASS"

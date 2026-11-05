@@ -1,0 +1,36 @@
+name: Test appending multiple entries
+on:
+  workflow_dispatch:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      - name: Remove any pre-existing netrc
+        run: rm -f "$HOME/.netrc"
+      - id: first
+        uses: .
+        with:
+          machine: one.example.com
+          username: user1
+          password: pass1
+      - id: second
+        uses: .
+        with:
+          machine: two.example.com
+          username: user2
+          password: pass2
+      - name: Assert both entries present in order
+        run: |
+          f="$HOME/.netrc"
+          echo "content:"; cat "$f"
+          lines="$(wc -l < "$f" | tr -d ' ')"
+          if [ "$lines" != "2" ]; then echo "FAIL: expected 2 lines, got $lines"; exit 1; fi
+          l1="$(sed -n 1p "$f")"; l2="$(sed -n 2p "$f")"
+          if [ "$l1" != "machine one.example.com login user1 password pass1" ]; then
+            echo "FAIL: line 1 wrong: $l1"; exit 1
+          fi
+          if [ "$l2" != "machine two.example.com login user2 password pass2" ]; then
+            echo "FAIL: line 2 wrong: $l2"; exit 1
+          fi
+          echo "PASS"
